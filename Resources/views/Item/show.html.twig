@@ -1,0 +1,108 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Item</h1>
+    {% include 'FarAssetManagerBundle:Item:nav.html.twig' %}
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Defid</th>
+                <td>{{ entity.defid }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Description' | trans }}</th>
+                <td>{{ entity.description }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Valueunit' | trans }}</th>
+                <td>{{ entity.valueUnit }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Datain' | trans }}</th>
+                <td>{{ entity.datain|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Dataviewed' | trans }}</th>
+                <td>{{ entity.dataviewed|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Dataout' | trans }}</th>
+                <td>{{ entity.dataout|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Location' | trans }}</th>
+                <td>{{ entity.location.description }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Quantity' | trans }}</th>
+                <td>{{ entity.qt }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'State' | trans }}</th>
+                <td>{{ entity.state.description }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Typeofitem' | trans }}</th>
+                <td>{{ entity.typeofItem.description }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Aquiredtype' | trans }}</th>
+                <td>{{ entity.aquiredtype.description }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Protocol' | trans }}</th>
+                <td>{{ entity.protocol.description }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Code' | trans }}</th>
+                <td>{{ entity.code }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Protocolcode' | trans }}</th>
+                <td>{{ entity.protocolCode }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Ncmreference' | trans }}</th>
+                <td>{{ entity.ncmReference.description }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Depreciation' | trans }}</th>
+                <td>{{ entity.depreciation }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Supplier' | trans }}</th>
+                <td>{{ entity.supplier }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Supplier_note_number' | trans }}</th>
+                <td>{{ entity.suppliernotenumber }}</td>
+            </tr>
+            <tr>
+                <th>Ean128</th>
+                <td>{{ entity.ean128 }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'Searchable' | trans }}</th>
+                <td>{{ entity.searchable }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('item') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('item_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

@@ -1,0 +1,124 @@
+<?php
+
+namespace Far\AssetManagerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Protocol
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="Far\AssetManagerBundle\Entity\ProtocolRepository")
+ */
+class Protocol
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=255)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=255)
+     */
+    private $code;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tcount", type="integer")
+     */
+    private $tcount;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Protocol
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     * @return Protocol
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string 
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set tcount
+     *
+     * @param integer $tcount
+     * @return Protocol
+     */
+    public function setTcount($tcount)
+    {
+        $this->tcount = $tcount;
+    
+        return $this;
+    }
+
+    /**
+     * Get tcount
+     *
+     * @return integer 
+     */
+    public function getTcount()
+    {
+        return $this->tcount;
+    }
+}

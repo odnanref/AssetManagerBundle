@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>Symfony2 is great</source>
+                <target>J'aime Symfony2</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Description</source>
+                <target>Descrição</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>Valueunit</source>
+                <target>Valor unitáro</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Datain</source>
+                <target>Data entrada</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Dataviewed</source>
+                <target>Visto na ultima data</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Dataout</source>
+                <target>Data Saída</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Location</source>
+                <target>Localização</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Locationid</source>
+                <target>Localização</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Qt</source>
+                <target>Quantidade</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>State</source>
+                <target>Estado</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Typeofitem</source>
+                <target>Tipo de item</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>Aquiredtype</source>
+                <target>Tipo de aquisição</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>Protocol</source>
+                <target>Protocolo</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>Code</source>
+                <target>Codigo</target>
+            </trans-unit>
+            <trans-unit id="15">
+                <source>Protocolcode</source>
+                <target>Codigo protocolo <span>(reference a outra instituição ou codigo antigo substituido)</span></target>
+            </trans-unit>
+            <trans-unit id="16">
+                <source>Ncmreference</source>
+                <target>Ref. NCM/SH</target>
+            </trans-unit>
+            <trans-unit id="17">
+                <source>Depreciation</source>
+                <target>Depreciação</target>
+            </trans-unit>
+            <trans-unit id="18">
+                <source>Supplier</source>
+                <target>Fornecedor</target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>Supplier_note_number</source>
+                <target>Nota/Cupom Fiscal</target>
+            </trans-unit>
+            <trans-unit id="20">
+                <source>Searchable</source>
+                <target>searchable</target>
+            </trans-unit>
+            <trans-unit id="21">
+                <source>Actions</source>
+                <target>Ações</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

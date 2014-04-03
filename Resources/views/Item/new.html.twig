@@ -1,0 +1,16 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+<h1>{{ 'Create' | trans }}</h1>
+    {% include 'FarAssetManagerBundle:Item:nav.html.twig' %}
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('item') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

@@ -1,0 +1,25 @@
+'Symfony2 is great': 'J''aime Symfony2'
+Description: Descrição
+Valueunit: 'Valor unitáro'
+Datain: 'Data entrada'
+Dataviewed: 'Visto na ultima data'
+Dataout: 'Data Saída'
+Location: Localização
+Locationid: Localização
+Qt: Quantidade
+State: Estado
+Typeofitem: 'Tipo de item'
+Aquiredtype: 'Tipo de aquisição'
+Protocol: Protocolo
+Code: Codigo
+Protocolcode: 'Codigo protocolo (reference a outra instituição ou codigo antigo substituido)'
+Ncmreference: 'Ref. NCM/SH'
+Depreciation: Depreciação
+Supplier: Fornecedor
+Supplier_note_number: 'Nota/Cupom Fiscal'
+Searchable: searchable
+Actions: Ações
+Quantity: __Quantity
+'Create a new entry': '__Create a new entry'
+Search: __Search
+List: __List
