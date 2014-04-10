@@ -67,7 +67,18 @@
                 </ul>
                 </td>
             </tr>
-        {% endfor %}
+            {% endfor %}
+            <tr>
+                <td cols='22'>
+                    {% if search is not defined %}
+                        {% set search = 'none' %}
+                    {% endif %}
+                    <form method='post' action='{{ path('item_export', { type:'csv', conditions: search } )  }}'>
+                    <input type='hidden' name='search' value='{% if search %}{{ search }}{% endif %}' />
+                    <input type='submit' class='btn' value='{{ 'Export' | trans }}'/>
+                </form>
+                </td>
+            </tr>
         </tbody>
     </table>
 

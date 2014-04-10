@@ -1,17 +1,5 @@
-{#% javascripts %}
-<script type='text/Javascript'>
-function toExport()
-{
-    {% if search %}
-    var searchExport = '{{ search }}';
-    {% else %}
-    var searchExport = "";
-    {% endif %}
 
-    location.href = {{ path('item_export', {'search': search, 'type': exportType}) }}
-}
-</script>
-{% endjavascripts %#}
+
 
 <ul>
 
@@ -31,12 +19,4 @@ function toExport()
     </a>
     </li>
 
-    <li>
-    <a href="javascript:toExport();">
-        {{ 'Export' | trans }}&nbsp;
-        <select name='export_type'>
-            <option value='csv'>CSV</option>
-        </select>
-    </a>
-    </li>
 </ul>

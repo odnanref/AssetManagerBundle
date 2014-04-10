@@ -26,6 +26,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+use Doctrine\ORM\EntityRepository;
+
 class ItemType extends AbstractType
 {
         /**
@@ -41,15 +43,51 @@ class ItemType extends AbstractType
             ->add('datain')
             ->add('dataviewed')
             ->add('dataout')
-            ->add('location')
+            ->add('location', 'entity',array(
+                'class' => 'FarAssetManagerBundle:Location',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('t')
+                        ->orderBy('t.description','ASC');
+                }
+            ))
             ->add('qt')
-            ->add('state')
-            ->add('typeofItem')
-            ->add('aquiredtype')
-            ->add('protocol')
+            ->add('state', 'entity',array(
+                'class' => 'FarAssetManagerBundle:State',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('t')
+                        ->orderBy('t.description','ASC');
+                }
+            ))
+            ->add('typeofItem', 'entity',array(
+                'class' => 'FarAssetManagerBundle:Typeofitem',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('t')
+                        ->orderBy('t.description','ASC');
+                }
+            ))
+            ->add('aquiredtype', 'entity',array(
+                'class' => 'FarAssetManagerBundle:Aquiredtype',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('t')
+                        ->orderBy('t.description','ASC');
+                }
+            ))
+            ->add('protocol', 'entity',array(
+                'class' => 'FarAssetManagerBundle:Protocol',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('t')
+                        ->orderBy('t.description','ASC');
+                }
+            ))
             ->add('code')
             ->add('protocolCode')
-            ->add('ncmReference')
+            ->add('ncmReference', 'entity',array(
+                'class' => 'FarAssetManagerBundle:NcmReference',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('t')
+                        ->orderBy('t.description','ASC');
+                }
+            ))
             ->add('depreciation')
             ->add('supplier')
             ->add('supplier_note_number')
@@ -57,7 +95,7 @@ class ItemType extends AbstractType
             ->add('searchable')
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

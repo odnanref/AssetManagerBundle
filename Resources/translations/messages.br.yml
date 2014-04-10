@@ -19,7 +19,7 @@ Supplier: Fornecedor
 Supplier_note_number: 'Nota/Cupom Fiscal'
 Searchable: searchable
 Actions: Ações
-Quantity: __Quantity
-'Create a new entry': '__Create a new entry'
-Search: __Search
-List: __List
+Quantity: Quantidade
+'Create a new entry': 'Criar novo'
+Search: "Procurar"
+List: "Lista"

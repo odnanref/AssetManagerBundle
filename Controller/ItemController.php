@@ -29,6 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Far\AssetManagerBundle\Entity\Item;
 use Far\AssetManagerBundle\Form\ItemType;
+use Far\AssetManagerBundle\Service\ExportCsv;
 
 /**
  * Item controller.
@@ -42,19 +43,24 @@ class ItemController extends Controller
      * Finds and displays a Item entity.
      *
      * @Route("/export/{type}/{conditions}", name="item_export")
-     * @Method("GET")
+     * @Method("POST")
      */
     public function exportAction($type, $conditions)
     {
-        $conditions = unserialize(urldecode($conditions));
+        if ($conditions == "none" ) {
+            $conditions = unserialize(urldecode($conditions));
+        } else {
+            $conditions = array();
+        }
+
         // Conditions
         switch($type) {
             case 'csv':
                 $em = $this->getDoctrine()->getManager();
                 $entities = $em->getRepository('FarAssetManagerBundle:Item')
-                    ->search($conditions, 'array');
+                    ->search($conditions);
                 //
-                $export = new Exportcsv($entities);
+                $export = new ExportCsv($entities);
                 $out = $export->getOutput();
                 break;
         }
@@ -211,6 +217,8 @@ class ItemController extends Controller
         $form->remove("dataviewed")
             ->remove("dataout")
             ->remove("depreciation")
+            ->remove("defid")
+            ->remove("code")
             ->remove("searchable");
 
         return array(

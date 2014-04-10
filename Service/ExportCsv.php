@@ -26,7 +26,7 @@ ini_set("memory_limit","1224M");
 
 use Far\AssetManagerBundle\Entity\Item;
 
-class ImportCsv
+class ExportCsv
 {
     private $erm;
 
@@ -51,7 +51,7 @@ class ImportCsv
                 $this->has_header = $options['has_header'];
             }
             if (array_key_exists("filename", $options)) {
-                $this->filename = $options['filename']
+                $this->filename = $options['filename'];
             }
         }
 
@@ -77,9 +77,36 @@ class ImportCsv
         }
         ob_start();
         $df = fopen("php://output", 'w');
-        fputcsv($df, array_keys(reset($array)));
+        $thead = array(
+            'NcmReference', 'Depreciate', 'Defid', 'Qt', 'Description', 'Code',
+            'Aquired', 'Value Unit', 'Type of Item', 'State', 'Location',
+            'Data in', 'Protocol', 'Protocol Code', 'Supplier Note Number', 
+            'Supplier', 'Ean128', 'Data viewed', 'Data Out'
+        );
+
+        fputcsv($df, $thead, $this->separator);
+
         foreach ($array as $row) {
-            fputcsv($df, $row, $this->separator);
+            $tmp = array(
+                $row->getNcmReference()->getDescription(),
+                $row->getDepreciation(),
+                $row->getDefid(),
+                $row->getQt(),
+                $row->getDescription(), $row->getCode(),
+                $row->getAquiredtype()->getDescription(),
+                $row->getValueUnit(), $row->getTypeofitem()->getDescription(),
+                $row->getState()->getDescription(),
+                $row->getLocation()->getDescription(),
+                // evaluate object
+                is_object($row->getDatain()) ? $row->getDatain()->format('d/m/Y') : '', 
+                $row->getProtocol()->getDescription(),
+                $row->getProtocolcode(), $row->getSupplierNoteNumber(),
+                $row->getSupplier(), $row->getEan128(), 
+                is_object($row->getDataviewed()) ? $row->getDataviewed()->format("d/m/Y") : '',
+                is_object($row->getDataout()) ? $row->getDataout()->format("d/m/Y") : ''
+            );
+
+            fputcsv($df, $tmp, $this->separator);
         }
         fclose($df);
         return ob_get_clean();
