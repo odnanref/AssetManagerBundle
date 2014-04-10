@@ -33,7 +33,7 @@ use Doctrine\ORM\EntityRepository;
 class ItemRepository extends EntityRepository
 {
 
-    public function search($conds)
+    public function search($conds, $format = null)
     {
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
@@ -78,7 +78,13 @@ class ItemRepository extends EntityRepository
                 }
             }
         }
+        //
         $query = $qb->getQuery();
-        return $query->getResult();
+        //
+        if ($format == 'array') {
+            return $query->getArrayResult();
+        } else {
+            return $query->getResult();
+        }
     }
 }

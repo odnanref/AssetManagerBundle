@@ -55,7 +55,7 @@
             </tr>
             <tr>
                 <th>{{ 'Protocol' | trans }}</th>
-                <td>{{ entity.protocol.description }}</td>
+                <td>{% if entity.protocol %}{{ entity.protocol.description }}{% endif %}</td>
             </tr>
             <tr>
                 <th>{{ 'Code' | trans }}</th>

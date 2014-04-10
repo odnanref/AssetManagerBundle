@@ -41,13 +41,41 @@ class ItemController extends Controller
     /**
      * Finds and displays a Item entity.
      *
-     * @Route("/export/{type}", name="item_export")
+     * @Route("/export/{type}/{conditions}", name="item_export")
      * @Method("GET")
-     * @Template("FarAssetManagerBundle:Item:search.html.twig")
      */
-    public function exportAction($type)
+    public function exportAction($type, $conditions)
     {
+        $conditions = unserialize(urldecode($conditions));
+        // Conditions
+        switch($type) {
+            case 'csv':
+                $em = $this->getDoctrine()->getManager();
+                $entities = $em->getRepository('FarAssetManagerBundle:Item')
+                    ->search($conditions, 'array');
+                //
+                $export = new Exportcsv($entities);
+                $out = $export->getOutput();
+                break;
+        }
 
+        $now = gmdate("D, d M Y H:i:s");
+        header("Expires: Tue, 03 Jul 2001 06:00:00 GMT"); // data estupida
+        header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+        header("Last-Modified: {$now} GMT");
+
+        // force download  
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        //
+        // disposition / encoding on response body
+        header("Content-Disposition: attachment;filename={$export->filename}");
+        header("Content-Transfer-Encoding: binary");
+        //
+        print $out;
+        // exit
+        exit();
     }
 
     /**
@@ -84,11 +112,14 @@ class ItemController extends Controller
     public function searchResultAction(Request $request)
     {
         $conds = $request->request->get('far_assetmanagerbundle_item');
+
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('FarAssetManagerBundle:Item')->search($conds);
+        $entities = $em->getRepository('FarAssetManagerBundle:Item')
+            ->search($conds);
 
         return array(
-            'entities' => $entities
+            'entities' => $entities,
+            'search'    => urlencode(serialize($conds))
         );
     }
 
@@ -103,7 +134,8 @@ class ItemController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('FarAssetManagerBundle:Item')->findAll();
+        $entities = $em->getRepository('FarAssetManagerBundle:Item')
+            ->findAll();
 
         return array(
             'entities' => $entities,
@@ -124,6 +156,16 @@ class ItemController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $code = $em->getRepository("FarAssetManagerBundle:Counters")->getAndInsert("code");
+            if ($code !== null) {
+                $entity->setCode($code->getTcount());
+            }
+
+            $defid = $em->getRepository("FarAssetManagerBundle:Counters")->getAndInsert("defid");
+            if ($defid !== null) {
+                $entity->setDefid($defid->getTcount());
+            }
+
             $em->persist($entity);
             $em->flush();
 
