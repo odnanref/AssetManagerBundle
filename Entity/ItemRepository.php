@@ -72,7 +72,17 @@ class ItemRepository extends EntityRepository
                         $qb->andWhere( 'i.' . $ky . ' LIKE :id'.$ky)
                             ->setParameter("id$ky", $tmp);
                     } else {
-                        $qb->andWhere( 'i.' . $ky . ' = :id'.$ky)
+                        $sign = '=';
+                        if (strpos($tmp, '>') == 0 ) {
+                            $sign = '>';
+                            $tmp = mb_substr($tmp, 1, strlen($tmp));
+                        }
+                        if (strpos($tmp, '<') == (strlen($tmp)-1)) {
+                            $sign = '<';
+                            $tmp = mb_substr($tmp, 0, -1);
+                        }
+                        // defined the sign and the val search the content
+                        $qb->andWhere( 'i.' . $ky . ' ' . $sign . ' :id'.$ky)
                             ->setParameter("id$ky", $tmp);
                     }
                 }
