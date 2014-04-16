@@ -47,7 +47,7 @@ class ItemController extends Controller
      */
     public function exportAction($type, $conditions)
     {
-        if ($conditions == "none" ) {
+        if ($conditions != "none" ) {
             $conditions = unserialize(urldecode($conditions));
         } else {
             $conditions = array();
@@ -63,6 +63,13 @@ class ItemController extends Controller
                 $export = new ExportCsv($entities);
                 $out = $export->getOutput();
                 break;
+            case 'pdf':
+                $export = new \StdClass();
+                $export->filename = date("Y-m-d") .'_export.pdf';
+                $out = $this->exportPdfLabels($conditions);
+                if (!is_readable($out)) {
+                    throw new \Exception("file is not readable $out ");
+                }
         }
 
         $now = gmdate("D, d M Y H:i:s");
@@ -82,6 +89,51 @@ class ItemController extends Controller
         print $out;
         // exit
         exit();
+    }
+
+    /**
+     * Export labels has PDF for printing
+     *
+     * @param array $conditions for sql search
+     * @return String
+     */
+    public function exportPdfLabels($conditions)
+    {
+        // result pdf file location
+        $result = sys_get_temp_dir() . "/" . date("Y-m-d_His")."_pdf_out.pdf";
+        if (!is_writable(sys_get_temp_dir())) {
+            throw new \Exception("Unable to open file for pdf export $result ");
+        }
+        // html storage template location
+        $outfile = sys_get_temp_dir() . "/" . date("Y-m-d_His")."_html_out.html";
+        if (!is_writable(sys_get_temp_dir()))  {
+            throw new \Exception("Unable to open file for template $outfile ");
+        }
+        // doctrine
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('FarAssetManagerBundle:Item')
+            ->search($conditions);
+        // some render
+        $input = $this->renderView(
+            'FarAssetManagerBundle:Item:templateLabel_6180.html.twig', 
+            array('entities' => $entities)
+        );
+
+        $fh = fopen($outfile, "w");
+        if ($fh) {
+            fwrite($fh, $input);
+        }
+        fclose($fh);
+        // formato Pimaco Bic 6180 100/3000 30/p
+        print '/usr/bin/wkhtmltopdf -B 13mm -T 13mm -R 5mm -L 5mm  '. $outfile . " " . $result ;
+//        ob_start();
+        $x = shell_exec('/usr/bin/wkhtmltopdf -B 13mm -T 13mm -R 5mm -L 5mm '. $outfile . " " . $result );
+        if ($x === null) {
+            throw new \Exception ("Failed executing html to pdf converter.");
+        }
+//        $outmessage = ob_get_clean();
+        // monolog out message has info
+        return $result;
     }
 
     /**
