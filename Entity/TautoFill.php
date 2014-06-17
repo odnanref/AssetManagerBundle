@@ -26,13 +26,17 @@ trait TautoFill {
 
     public function getAndInsert($val)
     {
+        $this->_em->getConnection()->beginTransaction();
+
         $valtmp = strtoupper(str_replace(' ','',trim($val)));
         $Res = $this->findBy(['code' => $valtmp]);
         if (count($Res) > 0 && $Res[0] != null) {
             $obj = $Res[0];
             $obj->setTcount($obj->getTcount()+1);
             $this->_em->persist($obj);
+
             $this->_em->flush();
+
         } else {
             $tmp = $this->getClassName();
             $obj = new $tmp();
@@ -43,6 +47,8 @@ trait TautoFill {
             $this->_em->persist($obj);
             $this->_em->flush();
         }
+
+        $this->_em->getConnection()->commit();
         return $obj;
     }
 }

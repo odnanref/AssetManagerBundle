@@ -29,6 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Far\AssetManagerBundle\Entity\Item;
 use Far\AssetManagerBundle\Form\ItemType;
+use Far\AssetManagerBundle\Service\ExportCsv;
 
 /**
  * Item controller.
@@ -41,13 +42,100 @@ class ItemController extends Controller
     /**
      * Finds and displays a Item entity.
      *
-     * @Route("/export/{type}", name="item_export")
-     * @Method("GET")
-     * @Template("FarAssetManagerBundle:Item:search.html.twig")
+     * @Route("/export/{type}/{conditions}", name="item_export")
+     * @Method("POST")
      */
-    public function exportAction($type)
+    public function exportAction($type, $conditions)
     {
+        if ($conditions != "none" ) {
+            $conditions = unserialize(urldecode($conditions));
+        } else {
+            $conditions = array();
+        }
 
+        // Conditions
+        switch($type) {
+            case 'csv':
+                $em = $this->getDoctrine()->getManager();
+                $entities = $em->getRepository('FarAssetManagerBundle:Item')
+                    ->search($conditions);
+                //
+                $export = new ExportCsv($entities);
+                $out = $export->getOutput();
+                break;
+            case 'pdf':
+                $export = new \StdClass();
+                $export->filename = date("Y-m-d") .'_export.pdf';
+                $out = $this->exportPdfLabels($conditions);
+                if (!is_readable($out)) {
+                    throw new \Exception("file is not readable $out ");
+                }
+                $out = file_get_contents($out);
+        }
+
+        $now = gmdate("D, d M Y H:i:s");
+        header("Expires: Tue, 03 Jul 2001 06:00:00 GMT"); // data estupida
+        header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+        header("Last-Modified: {$now} GMT");
+
+        // force download  
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        //
+        // disposition / encoding on response body
+        header("Content-Disposition: attachment;filename={$export->filename}");
+        header("Content-Transfer-Encoding: binary");
+        //
+        print $out;
+        // exit
+        exit();
+    }
+
+    /**
+     * Export labels has PDF for printing
+     *
+     * @param array $conditions for sql search
+     * @return String
+     */
+    public function exportPdfLabels($conditions)
+    {
+        // result pdf file location
+        $result = sys_get_temp_dir() . "/" . date("Y-m-d_His")."_pdf_out.pdf";
+        if (!is_writable(sys_get_temp_dir())) {
+            throw new \Exception("Unable to open file for pdf export $result ");
+        }
+        // html storage template location
+        $outfile = sys_get_temp_dir() . "/" . date("Y-m-d_His")."_html_out.html";
+        if (!is_writable(sys_get_temp_dir()))  {
+            throw new \Exception("Unable to open file for template $outfile ");
+        }
+        // doctrine
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('FarAssetManagerBundle:Item')
+            ->search($conditions);
+        // some render
+        $input = $this->renderView(
+            'FarAssetManagerBundle:Item:templateLabel_6180.html.twig', 
+            array('entities' => $entities)
+        );
+
+        $fh = fopen($outfile, "w");
+        if ($fh) {
+            fwrite($fh, $input);
+        }
+        fclose($fh);
+        // formato Pimaco Bic 6180 100/3000 30/p
+        // TODO add wkhtmltopdf path  to a config var
+//        print '/usr/local/wkhtmltox/bin/wkhtmltopdf -B 13mm -T 13mm -R 5mm -L 5mm  '. $outfile . " " . $result ;
+//        ob_start();
+        $x = shell_exec('/usr/local/wkhtmltox/bin/wkhtmltopdf -B 13mm -T 13mm -L 3mm -R 3mm '. $outfile . " " . $result );
+        if ($x === null && !is_readable($result)) {
+            throw new \Exception ("Failed executing html to pdf converter.");
+        }
+//        $outmessage = ob_get_clean();
+        // monolog out message has info
+        return $result;
     }
 
     /**
@@ -84,11 +172,14 @@ class ItemController extends Controller
     public function searchResultAction(Request $request)
     {
         $conds = $request->request->get('far_assetmanagerbundle_item');
+
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('FarAssetManagerBundle:Item')->search($conds);
+        $entities = $em->getRepository('FarAssetManagerBundle:Item')
+            ->search($conds);
 
         return array(
-            'entities' => $entities
+            'entities' => $entities,
+            'search'    => urlencode(serialize($conds))
         );
     }
 
@@ -103,7 +194,8 @@ class ItemController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('FarAssetManagerBundle:Item')->findAll();
+        $entities = $em->getRepository('FarAssetManagerBundle:Item')
+            ->findAll();
 
         return array(
             'entities' => $entities,
@@ -124,6 +216,16 @@ class ItemController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $code = $em->getRepository("FarAssetManagerBundle:Counters")->getAndInsert("code");
+            if ($code !== null) {
+                $entity->setCode($code->getTcount());
+            }
+
+            $defid = $em->getRepository("FarAssetManagerBundle:Counters")->getAndInsert("defid");
+            if ($defid !== null) {
+                $entity->setDefid($defid->getTcount());
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -169,6 +271,8 @@ class ItemController extends Controller
         $form->remove("dataviewed")
             ->remove("dataout")
             ->remove("depreciation")
+            ->remove("defid")
+            ->remove("code")
             ->remove("searchable");
 
         return array(

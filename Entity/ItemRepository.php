@@ -33,7 +33,7 @@ use Doctrine\ORM\EntityRepository;
 class ItemRepository extends EntityRepository
 {
 
-    public function search($conds)
+    public function search($conds, $format = null)
     {
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
@@ -72,13 +72,29 @@ class ItemRepository extends EntityRepository
                         $qb->andWhere( 'i.' . $ky . ' LIKE :id'.$ky)
                             ->setParameter("id$ky", $tmp);
                     } else {
-                        $qb->andWhere( 'i.' . $ky . ' = :id'.$ky)
+                        $sign = '=';
+                        if (strpos($tmp, '>') === 0 ) {
+                            $sign = '>';
+                            $tmp = mb_substr($tmp, 1, strlen($tmp));
+                        }
+                        if (strpos($tmp, '<') !== false) {
+                            $sign = '<';
+                            $tmp = mb_substr($tmp, 0, -1);
+                        }
+                        // defined the sign and the val search the content
+                        $qb->andWhere( 'i.' . $ky . ' ' . $sign . ' :id'.$ky)
                             ->setParameter("id$ky", $tmp);
                     }
                 }
             }
         }
+        //
         $query = $qb->getQuery();
-        return $query->getResult();
+        //
+        if ($format == 'array') {
+            return $query->getArrayResult();
+        } else {
+            return $query->getResult();
+        }
     }
 }
