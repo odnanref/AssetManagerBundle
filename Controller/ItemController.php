@@ -127,18 +127,8 @@ class ItemController extends Controller
         }
         fclose($fh);
         // formato Pimaco Bic 6180 100/3000 30/p
-<<<<<<< HEAD
-        // TODO add wkhtmltopdf path  to a config var
-//        print '/usr/local/wkhtmltox/bin/wkhtmltopdf -B 13mm -T 13mm -R 5mm -L 5mm  '. $outfile . " " . $result ;
-//        ob_start();
         $x = shell_exec('/usr/local/wkhtmltox/bin/wkhtmltopdf -B 13mm -T 13mm -L 3mm -R 3mm '. $outfile . " " . $result );
         if ($x === null && !is_readable($result)) {
-=======
-        print '/usr/bin/wkhtmltopdf -B 13mm -T 13mm -R 5mm -L 5mm  '. $outfile . " " . $result ;
-//        ob_start();
-        $x = shell_exec('/usr/bin/wkhtmltopdf -B 13mm -T 13mm -R 5mm -L 5mm '. $outfile . " " . $result );
-        if ($x === null) {
->>>>>>> 3d5752ba07a36929d3e59728b5ec1d2662edc082
             throw new \Exception ("Failed executing html to pdf converter.");
         }
 //        $outmessage = ob_get_clean();
