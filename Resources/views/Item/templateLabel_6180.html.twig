@@ -1,0 +1,106 @@
+<html>
+    <head>
+        <style>
+            @media screen , print {
+                body {
+                    margin: 0;
+                    text-align:center;
+                }
+                .table_style {
+                    width: 100%;
+                }
+                .table_style td {
+                    text-align: left;
+                    padding: 0 0 0 3.175mm;
+                }
+                .space {
+                    height: 2.645833333mm;
+                }
+                .div_print {
+                    width: 62mm;
+                    height: 25mm;
+                    margin-left: 3.735416667mm;
+                    border-width: 1px;
+                    border-style: solid;
+                    border-color: black;
+                    float: left;
+                }
+                .part_dec_print {
+                    font: 2mm arial;
+                    text-align: left;
+                    padding-left: 6mm;
+                    height: 4.5mm;
+                    width: 40mm;
+                }
+                .p_tag {
+                    height: 100%;
+                    vertical-align: middle;
+                    padding-top: 1.5875mm;
+                }
+                .qty_span {
+                    padding-top: 1.5875mm;
+                }
+                .part_print {
+                    font: 6.5mm arial;
+                    height: 6.5mm;
+                    text-align: left;
+                    padding-left: 6mm;
+                    position: relative;
+                    top: 10px;
+                    width: 40mm;
+                }
+                .bar_print {
+                    padding-left: 3.96875mm;
+                    position: relative;
+                    left: 50px;
+                    top: -20px;
+                }
+                .qty_print {
+                    font: 3mm arial;
+                    text-align: center;
+                    transform: rotate(90deg);
+                    -webkit-transform: rotate(90deg);
+                    height: 4mm;
+                    margin-top:0px;
+                    margin-right: 1mm;
+                    margin-left: 1mm;
+                    vertical-align: middle;
+                    position: relative;
+                    top: -50px;
+                    left: 140px;
+                    padding-left: 1px;
+                    z-index:3px;
+                    width: 40mm;
+                }
+                .date_print {
+                    font: 2mm arial;
+                    text-align: left;
+                    width: 40mm;
+                    padding-right: 2.645833333mm;
+                    padding-left: 6mm;
+                    margin-top: 2.995833333mm;
+                    height: 3mm;
+                    position: relative;
+                    top: -50px;
+                    left: 10px;
+                    z-index: 6;
+                }
+            }
+        </style>
+    </head>
+    <body cz-shortcut-listen="true">
+        {% for entity in entities %}
+        <div class="div_print">
+            <div class="part_dec_print">
+                <div class="p_tag">{{ entity.description | truncate(30) }}</div>
+            </div>
+            <div class="part_print">{{ entity.code | truncate(8) }}</div>
+            <div class="bar_print">
+                <img alt="testing" src="/img/barcode/radF19BA.png" width='45mm' height='45mm'>
+            </div>
+            <div class="qty_print">{% if entity.protocol != '' %}{{ entity.protocol| truncate(15) }}{% else %}HSAE{% endif %}</div>
+            <div class="date_print">{{ entity.location | truncate(30) }}</div>
+        </div>
+        {% endfor %}
+    </body>
+</html>
